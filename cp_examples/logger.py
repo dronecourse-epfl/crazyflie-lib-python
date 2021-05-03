@@ -40,6 +40,7 @@ from cflib.crazyflie.log import LogConfig
 logging.basicConfig(level=logging.ERROR)
 
 import numpy as np
+import os
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.position_hl_commander import PositionHlCommander
 
@@ -154,9 +155,12 @@ class LoggingExample:
         self.is_connected = False
 
         # Get timestamp
-        dtime = dt.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+        filename = dt.datetime.now().strftime("%Y_%m_%d_%H_%M_%S.csv")
         # Save log to file
-        np.savetxt('logs/'+dtime+'.csv', self.logs, delimiter=',')
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+        filepath = os.path.join(os.getcwd(),'..','logs',filename)
+        np.savetxt(filepath, self.logs, delimiter=',')
 
 
 def connect_to_first_found():
